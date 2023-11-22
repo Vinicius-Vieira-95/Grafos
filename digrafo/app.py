@@ -3,6 +3,8 @@
 # import matplotlib.pyplot as plt
 # import networkx as nx
 
+from collections import deque
+
 
 class Grafo:
     def __init__(self):
@@ -72,17 +74,46 @@ class Grafo:
         peso = 0
 
         for aresta in self.grafo:
-            if (aresta[0] == v1 and aresta[1] == v2) or (aresta[0] == v2 and aresta[1] == v1):
+            if (aresta[0] == v1 and aresta[1] == v2) or (
+                aresta[0] == v2 and aresta[1] == v1
+            ):
                 peso = aresta[2]
                 break
         if peso == 0:
             return "Não existe aresta entre os vértices informados"
         return peso
 
+    def bfs(self, vertice_inicial):
+        visitados = set()
+        fila = deque([vertice_inicial])
+
+        while fila:
+            vertice_atual = fila.popleft()
+            if vertice_atual not in visitados:
+                print(vertice_atual, end=" ")
+                visitados.add(vertice_atual)
+
+                vizinhos = self.vizinho_v(vertice_atual)
+                fila.extend(v for v in vizinhos if v not in visitados)
+
+    def dfs(self, vertice_inicial):
+        visitados = set()
+
+        def dfs_recursivo(vertice):
+            print(vertice, end=" ")
+            visitados.add(vertice)
+
+            vizinhos = self.vizinho_v(vertice)
+            for vizinho in vizinhos:
+                if vizinho not in visitados:
+                    dfs_recursivo(vizinho)
+
+        dfs_recursivo(vertice_inicial)
+
 
 # coloque o diretorio onde vai ficar seu arquivo txt
 arquivo = open(
-    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\grafo-main-av2.txt",
+    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste2-av2.txt",
     "r",
     encoding="utf-8",
 )
@@ -108,5 +139,8 @@ print("numero de vertces: ", grafo.num_vertices())
 print("vizinhos de v: ", grafo.vizinho_v(2))
 print("grau de vertice: ", grafo.grau_de_v(2))
 print("peso da aresta: ", grafo.pesos_arestas_entre_vertices(1, 2))
-print("maior grau: ", grafo.grau_maximo())
-print("menor grau: ", grafo.grau_minimo())
+grafo.bfs(2)
+print()
+grafo.dfs(4)
+# print("maior grau: ", grafo.grau_maximo())
+# print("menor grau: ", grafo.grau_minimo())
