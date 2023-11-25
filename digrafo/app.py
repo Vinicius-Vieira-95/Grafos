@@ -7,6 +7,8 @@ from collections import deque
 
 
 class Grafo:
+    bfs_visitados = []
+
     def __init__(self):
         self.g_num_vertices = 0
         self.g_num_arestas = 0
@@ -83,18 +85,44 @@ class Grafo:
             return "Não existe aresta entre os vértices informados"
         return peso
 
+    # def bfs(self, vertice_inicial):
+    #     visitados = set()
+    #     fila = deque(
+    #         [(vertice_inicial, None)]
+    #     )  # Incluindo None para representar o pai do vértice inicial
+    #     while fila:
+    #         vertice_atual, pai_atual = fila.popleft()
+    #         if vertice_atual not in visitados:
+    #             # print(vertice_atual, end=" ")
+    #             visitados.add(vertice_atual)
+    #             vizinhos = self.vizinho_v(vertice_atual)
+
+    #             for vizinho in vizinhos:
+    #                 # Adiciona o vértice na fila apenas se não estiver na fila e não for pai do vértice atual
+    #                 if vizinho not in visitados and vizinho != pai_atual:
+    #                     fila.append((vizinho, vertice_atual))
+
+    #                     # Aqui você pode usar o vértice_atual e vizinho como necessário
+    #                     print(f"Pai: {vertice_atual}, Filho: {vizinho}")
+
     def bfs(self, vertice_inicial):
         visitados = set()
-        fila = deque([vertice_inicial])
-
+        fila = deque(
+            [(vertice_inicial, None, 0)]
+        )  # Incluindo a distância como o terceiro elemento da tupla
         while fila:
-            vertice_atual = fila.popleft()
+            vertice_atual, pai_atual, distancia = fila.popleft()
             if vertice_atual not in visitados:
-                print(vertice_atual, end=" ")
+                print(
+                    f"Vértice: {vertice_atual}, Pai: {pai_atual}, Distância: {distancia}"
+                )
                 visitados.add(vertice_atual)
-
                 vizinhos = self.vizinho_v(vertice_atual)
-                fila.extend(v for v in vizinhos if v not in visitados)
+
+                for vizinho in vizinhos:
+                    # Adiciona o vértice na fila apenas se não estiver na fila e não for pai do vértice atual
+                    if vizinho not in visitados and vizinho != pai_atual:
+                        fila.append((vizinho, vertice_atual, distancia + 1))
 
     def dfs(self, vertice_inicial):
         visitados = set()
@@ -113,7 +141,7 @@ class Grafo:
 
 # coloque o diretorio onde vai ficar seu arquivo txt
 arquivo = open(
-    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste2-av2.txt",
+    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste-av2.txt",
     "r",
     encoding="utf-8",
 )
@@ -141,6 +169,6 @@ print("grau de vertice: ", grafo.grau_de_v(2))
 print("peso da aresta: ", grafo.pesos_arestas_entre_vertices(1, 2))
 grafo.bfs(2)
 print()
-grafo.dfs(4)
+# grafo.dfs(4)
 # print("maior grau: ", grafo.grau_maximo())
 # print("menor grau: ", grafo.grau_minimo())
