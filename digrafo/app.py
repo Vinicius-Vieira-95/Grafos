@@ -124,20 +124,6 @@ class Grafo:
                     if vizinho not in visitados and vizinho != pai_atual:
                         fila.append((vizinho, vertice_atual, distancia + 1))
 
-    # def dfs(self, vertice_inicial):
-    #     visitados = set()
-
-    #     def dfs_recursivo(vertice):
-    #         print(vertice, end=" ")
-    #         visitados.add(vertice)
-
-    #         vizinhos = self.vizinho_v(vertice)
-    #         for vizinho in vizinhos:
-    #             if vizinho not in visitados:
-    #                 dfs_recursivo(vizinho)
-
-    #     dfs_recursivo(vertice_inicial)
-
     def dfs(self, vertice_inicial):
         visitados = set()
         tempo = 0  # Inicializa o tempo de visita
@@ -147,33 +133,38 @@ class Grafo:
         v_ini = {}
         v_fim = {}
 
-        def dfs_recursivo(vertice):
-            nonlocal tempo
-            print(vertice, end=" ")
-            visitados.add(vertice)
-            v_ini[vertice] = tempo  # Armazena o tempo de início da visita
-            tempo += 1
+        stack = [(vertice_inicial, None, 0)]  # Pilha para a DFS
+        while stack:
+            vertice_atual, pai_atual, estado = stack[-1]
 
-            vizinhos = self.vizinho_v(vertice)
+            if estado == 0:
+                # Estado 0: Vértice encontrado pela primeira vez
+                # print(vertice_atual, end=" ")
+                visitados.add(vertice_atual)
+                v_ini[vertice_atual] = tempo
+                tempo += 1
+                pi[vertice_atual] = pai_atual
+
+            vizinhos = self.vizinho_v(vertice_atual)
             for vizinho in vizinhos:
                 if vizinho not in visitados:
-                    pi[vizinho] = vertice  # Armazena o vértice predecessor
-                    dfs_recursivo(vizinho)
-
-            v_fim[vertice] = tempo  # Armazena o tempo de término da visita
-            tempo += 1
-
-        dfs_recursivo(vertice_inicial)
+                    stack.append((vizinho, vertice_atual, 0))
+                    break
+            else:
+                # Estado 1: Todos os vizinhos foram visitados
+                stack.pop()
+                v_fim[vertice_atual] = tempo
+                tempo += 1
 
         # Imprime os resultados
         print("\nPi:", pi)
-        print("v.ini:", v_ini)
-        print("v.fim:", v_fim)
+        print("\nv.ini:", v_ini)
+        print("\nv.fim:", v_fim)
 
 
 # coloque o diretorio onde vai ficar seu arquivo txt
 arquivo = open(
-    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste-av2.txt",
+    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste4-10000.txt",
     "r",
     encoding="utf-8",
 )
@@ -194,7 +185,7 @@ grafo = Grafo()
 for elem in lista_aresta:
     grafo.add_aresta(int(elem[0]), int(elem[1]), int(elem[2]))
 
-print("numero de arestas: ", grafo.num_aresta())
+print("numero de arestas/arcos: ", grafo.num_aresta())
 print("numero de vertces: ", grafo.num_vertices())
 print("vizinhos de v: ", grafo.vizinho_v(2))
 print("grau de vertice: ", grafo.grau_de_v(2))
