@@ -124,19 +124,51 @@ class Grafo:
                     if vizinho not in visitados and vizinho != pai_atual:
                         fila.append((vizinho, vertice_atual, distancia + 1))
 
+    # def dfs(self, vertice_inicial):
+    #     visitados = set()
+
+    #     def dfs_recursivo(vertice):
+    #         print(vertice, end=" ")
+    #         visitados.add(vertice)
+
+    #         vizinhos = self.vizinho_v(vertice)
+    #         for vizinho in vizinhos:
+    #             if vizinho not in visitados:
+    #                 dfs_recursivo(vizinho)
+
+    #     dfs_recursivo(vertice_inicial)
+
     def dfs(self, vertice_inicial):
         visitados = set()
+        tempo = 0  # Inicializa o tempo de visita
+
+        # Dicionários para armazenar pi, v.ini e v.fim para cada vértice
+        pi = {}
+        v_ini = {}
+        v_fim = {}
 
         def dfs_recursivo(vertice):
+            nonlocal tempo
             print(vertice, end=" ")
             visitados.add(vertice)
+            v_ini[vertice] = tempo  # Armazena o tempo de início da visita
+            tempo += 1
 
             vizinhos = self.vizinho_v(vertice)
             for vizinho in vizinhos:
                 if vizinho not in visitados:
+                    pi[vizinho] = vertice  # Armazena o vértice predecessor
                     dfs_recursivo(vizinho)
 
+            v_fim[vertice] = tempo  # Armazena o tempo de término da visita
+            tempo += 1
+
         dfs_recursivo(vertice_inicial)
+
+        # Imprime os resultados
+        print("\nPi:", pi)
+        print("v.ini:", v_ini)
+        print("v.fim:", v_fim)
 
 
 # coloque o diretorio onde vai ficar seu arquivo txt
@@ -169,6 +201,6 @@ print("grau de vertice: ", grafo.grau_de_v(2))
 print("peso da aresta: ", grafo.pesos_arestas_entre_vertices(1, 2))
 grafo.bfs(2)
 print()
-# grafo.dfs(4)
+grafo.dfs(4)
 # print("maior grau: ", grafo.grau_maximo())
 # print("menor grau: ", grafo.grau_minimo())
