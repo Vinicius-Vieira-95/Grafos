@@ -3,6 +3,7 @@
 # import matplotlib.pyplot as plt
 # import networkx as nx
 
+import heapq
 from collections import deque
 
 
@@ -186,10 +187,41 @@ class Grafo:
 
         return distancias, predecessores
 
+    def dijkstra(self, vertice_origem):
+        # Inicializa as listas de distâncias e predecessores
+        distancias = {v: float("inf") for v in range(1, self.num_vertices() + 1)}
+        predecessores = {v: None for v in range(1, self.num_vertices() + 1)}
+
+        # Define a distância da origem para ela mesma como 0
+        distancias[vertice_origem] = 0
+
+        # Inicializa a fila de prioridade
+        fila_prioridade = [(0, vertice_origem)]
+
+        while fila_prioridade:
+            dist_vertice, vertice = heapq.heappop(fila_prioridade)
+
+            # Se a distância atual for maior que a armazenada, ignore
+            if dist_vertice > distancias[vertice]:
+                continue
+
+            # Relaxa as arestas
+            vizinhos = self.vizinho_v(vertice)
+            for vizinho in vizinhos:
+                peso_aresta = self.pesos_arestas_entre_vertices(vertice, vizinho)
+                nova_distancia = distancias[vertice] + peso_aresta
+
+                if nova_distancia < distancias[vizinho]:
+                    distancias[vizinho] = nova_distancia
+                    predecessores[vizinho] = vertice
+                    heapq.heappush(fila_prioridade, (nova_distancia, vizinho))
+
+        return distancias, predecessores
+
 
 # coloque o diretorio onde vai ficar seu arquivo txt
 arquivo = open(
-    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste1-8.txt",
+    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste2-.txt",
     "r",
     encoding="utf-8",
 )
@@ -220,8 +252,10 @@ grafo.bfs(2)
 print("\n DFS: ")
 grafo.dfs(2)
 print("\n Bellman-Ford: ")
-print(grafo.bellman_ford(2))
+print(grafo.bellman_ford(8))
+print("\n Dijkstra: ")
+print(grafo.dijkstra(8))
 
-print("\n Grau máximo e mínimo:")
-print("maior grau: ", grafo.grau_maximo())
-print("menor grau: ", grafo.grau_minimo())
+# print("\n Grau máximo e mínimo:")
+# print("maior grau: ", grafo.grau_maximo())
+# print("menor grau: ", grafo.grau_minimo())
