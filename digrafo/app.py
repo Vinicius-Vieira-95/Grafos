@@ -161,10 +161,35 @@ class Grafo:
         print("\nv.ini:", v_ini)
         print("\nv.fim:", v_fim)
 
+    def bellman_ford(self, vertice_origem):
+        # Inicializa as listas de distâncias e predecessores
+        distancias = {v: float("inf") for v in range(1, self.num_vertices() + 1)}
+        predecessores = {v: None for v in range(1, self.num_vertices() + 1)}
+
+        # Define a distância da origem para ela mesma como 0
+        distancias[vertice_origem] = 0
+
+        # Relaxa as arestas repetidamente
+        for _ in range(self.num_vertices() - 1):
+            for aresta in self.grafo:
+                v1, v2, peso = aresta
+                if distancias[v1] + peso < distancias[v2]:
+                    distancias[v2] = distancias[v1] + peso
+                    predecessores[v2] = v1
+
+        # Verifica se há ciclos negativos
+        for aresta in self.grafo:
+            v1, v2, peso = aresta
+            if distancias[v1] + peso < distancias[v2]:
+                print("O grafo contém um ciclo negativo.")
+                return None
+
+        return distancias, predecessores
+
 
 # coloque o diretorio onde vai ficar seu arquivo txt
 arquivo = open(
-    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste4-10000.txt",
+    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste1-8.txt",
     "r",
     encoding="utf-8",
 )
@@ -190,8 +215,13 @@ print("numero de vertces: ", grafo.num_vertices())
 print("vizinhos de v: ", grafo.vizinho_v(2))
 print("grau de vertice: ", grafo.grau_de_v(2))
 print("peso da aresta: ", grafo.pesos_arestas_entre_vertices(1, 2))
+print("\n BFS: ")
 grafo.bfs(2)
-print()
-grafo.dfs(4)
-# print("maior grau: ", grafo.grau_maximo())
-# print("menor grau: ", grafo.grau_minimo())
+print("\n DFS: ")
+grafo.dfs(2)
+print("\n Bellman-Ford: ")
+print(grafo.bellman_ford(2))
+
+print("\n Grau máximo e mínimo:")
+print("maior grau: ", grafo.grau_maximo())
+print("menor grau: ", grafo.grau_minimo())
