@@ -51,11 +51,11 @@ class Grafo:
 
     # Item d) retorna o grau do vértice v, ou seja o número de arestas incidentes a v
     def d(self, vertice):
-        lista = self.vizinho_v(vertice)
+        lista = self.viz(vertice)
         return len(lista)
     
     # Item e) retorna o peso da aresta uv
-    def pesos_arestas_entre_vertices(self, u, v):
+    def w(self, u, v):
         peso = 0
 
         for aresta in self.grafo:
@@ -72,7 +72,7 @@ class Grafo:
     def max_d(self):
         max_grau = 0
 
-        for vertice in range(1, self.num_vertices() + 1):
+        for vertice in range(1, self.n() + 1):
             grau_vertice = self.grau_de_v(vertice)
             if grau_vertice > max_grau:
                 max_grau = grau_vertice
@@ -84,7 +84,7 @@ class Grafo:
         # Inicializa o menor grau como infinito ou um valor grande o suficiente
         min_grau = float("inf")
 
-        for vertice in range(1, self.num_vertices() + 1):
+        for vertice in range(1, self.n() + 1):
             grau_vertice = self.grau_de_v(vertice)
             if grau_vertice < min_grau:
                 min_grau = grau_vertice
@@ -130,7 +130,7 @@ class Grafo:
                     f"Vértice: {vertice_atual}, Pai: {pai_atual}, Distância: {distancia}"
                 )
                 visitados.add(vertice_atual)
-                vizinhos = self.vizinho_v(vertice_atual)
+                vizinhos = self.viz(vertice_atual)
 
                 for vizinho in vizinhos:
                     # Adiciona o vértice na fila apenas se não estiver na fila e não for pai do vértice atual
@@ -159,7 +159,7 @@ class Grafo:
                 tempo += 1
                 pi[vertice_atual] = pai_atual
 
-            vizinhos = self.vizinho_v(vertice_atual)
+            vizinhos = self.viz(vertice_atual)
             for vizinho in vizinhos:
                 if vizinho not in visitados:
                     stack.append((vizinho, vertice_atual, 0))
@@ -179,14 +179,14 @@ class Grafo:
     # Bellman ford
     def bellman_ford(self, vertice_origem):
         # Inicializa as listas de distâncias e predecessores
-        distancias = {v: float("inf") for v in range(1, self.num_vertices() + 1)}
-        predecessores = {v: None for v in range(1, self.num_vertices() + 1)}
+        distancias = {v: float("inf") for v in range(1, self.n() + 1)}
+        predecessores = {v: None for v in range(1, self.n() + 1)}
 
         # Define a distância da origem para ela mesma como 0
         distancias[vertice_origem] = 0
 
         # Relaxa as arestas repetidamente
-        for _ in range(self.num_vertices() - 1):
+        for _ in range(self.n() - 1):
             for aresta in self.grafo:
                 v1, v2, peso = aresta
                 if distancias[v1] + peso < distancias[v2]:
@@ -206,8 +206,8 @@ class Grafo:
     # Dijkstra
     def dijkstra(self, vertice_origem):
         # Inicializa as listas de distâncias e predecessores
-        distancias = {v: float("inf") for v in range(1, self.num_vertices() + 1)}
-        predecessores = {v: None for v in range(1, self.num_vertices() + 1)}
+        distancias = {v: float("inf") for v in range(1, self.n() + 1)}
+        predecessores = {v: None for v in range(1, self.n() + 1)}
 
         # Define a distância da origem para ela mesma como 0
         distancias[vertice_origem] = 0
@@ -223,9 +223,9 @@ class Grafo:
                 continue
 
             # Relaxa as arestas
-            vizinhos = self.vizinho_v(vertice)
+            vizinhos = self.viz(vertice)
             for vizinho in vizinhos:
-                peso_aresta = self.pesos_arestas_entre_vertices(vertice, vizinho)
+                peso_aresta = self.w(vertice, vizinho)
                 nova_distancia = distancias[vertice] + peso_aresta
 
                 if nova_distancia < distancias[vizinho]:
@@ -239,7 +239,7 @@ class Grafo:
 # coloque o diretorio onde vai ficar seu arquivo txt
 
 arquivo = open(
-    "D:\Arquivos_\Documentos\Tiago\Python\vinicius\Grafos\digrafo\teste2-.txt",
+    "teste2-.txt",
     "r",
     encoding="utf-8",
 )
