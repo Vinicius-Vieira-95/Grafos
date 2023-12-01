@@ -73,7 +73,7 @@ class Grafo:
         max_grau = 0
 
         for vertice in range(1, self.n() + 1):
-            grau_vertice = self.grau_de_v(vertice)
+            grau_vertice = self.d(vertice)
             if grau_vertice > max_grau:
                 max_grau = grau_vertice
 
@@ -85,7 +85,7 @@ class Grafo:
         min_grau = float("inf")
 
         for vertice in range(1, self.n() + 1):
-            grau_vertice = self.grau_de_v(vertice)
+            grau_vertice = self.d(vertice)
             if grau_vertice < min_grau:
                 min_grau = grau_vertice
 
