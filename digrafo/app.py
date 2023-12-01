@@ -10,22 +10,25 @@ from collections import deque
 class Grafo:
     bfs_visitados = []
 
-    def __init__(self):
+    # Função construtora para inicializar a classe grafo
+    def __init__(self): 
         self.g_num_vertices = 0
         self.g_num_arestas = 0
         self.grafo = []
         self.result = []
 
-    def add_aresta(self, v1, v2, peso):
-        self.grafo.append([v1, v2, peso])
+    # Função para adicionar aresta entre dois vértices
+    def add_aresta(self, u, v, peso): 
+        self.grafo.append([u, v, peso])
         self.g_num_arestas += 1
 
     def sub_arvore(self, pai, i):
         if pai[i] == i:
             return i
         return self.sub_arvore(pai, pai[i])
-
-    def num_vertices(self):
+    
+    # Item a) retorna o número de vértices do grafo
+    def n(self):
         # compara qual dos dois vertices são maiores
         for elemento in self.grafo:
             if elemento[1] > elemento[0]:
@@ -33,22 +36,40 @@ class Grafo:
             else:
                 self.g_num_vertices = elemento[0]
         return self.g_num_vertices
-
-    def num_aresta(self):
+    
+    # Item b) retorna o número de arestas do grafo    
+    def m(self):
         return self.g_num_arestas
 
-    def vizinho_v(self, vertice):
+    # Item c) retorna o número de vizinhos do grafo
+    def viz(self, vertice):
         vizinhos = []
         for aresta in self.grafo:
             if aresta[0] == vertice:
                 vizinhos.append(aresta[1])
         return vizinhos
 
-    def grau_de_v(self, vertice):
+    # Item d) retorna o grau do vértice v, ou seja o número de arestas incidentes a v
+    def d(self, vertice):
         lista = self.vizinho_v(vertice)
         return len(lista)
+    
+    # Item e) retorna o peso da aresta uv
+    def pesos_arestas_entre_vertices(self, u, v):
+        peso = 0
 
-    def grau_maximo(self):
+        for aresta in self.grafo:
+            if (aresta[0] == u and aresta[1] == v) or (
+                aresta[0] == u and aresta[1] == v
+            ):
+                peso = aresta[2]
+                break
+        if peso == 0:
+            return "Não existe aresta entre os vértices informados"
+        return peso
+    
+    # Item g) retorna o gráu máximo presente no grafo
+    def max_d(self):
         max_grau = 0
 
         for vertice in range(1, self.num_vertices() + 1):
@@ -58,7 +79,8 @@ class Grafo:
 
         return max_grau
 
-    def grau_minimo(self):
+    # Item f) retorna o grau mínimo presente no grafo
+    def min_d(self):
         # Inicializa o menor grau como infinito ou um valor grande o suficiente
         min_grau = float("inf")
 
@@ -73,18 +95,7 @@ class Grafo:
 
         return min_grau
 
-    def pesos_arestas_entre_vertices(self, v1, v2):
-        peso = 0
-
-        for aresta in self.grafo:
-            if (aresta[0] == v1 and aresta[1] == v2) or (
-                aresta[0] == v2 and aresta[1] == v1
-            ):
-                peso = aresta[2]
-                break
-        if peso == 0:
-            return "Não existe aresta entre os vértices informados"
-        return peso
+    
 
     # def bfs(self, vertice_inicial):
     #     visitados = set()
@@ -106,6 +117,7 @@ class Grafo:
     #                     # Aqui você pode usar o vértice_atual e vizinho como necessário
     #                     print(f"Pai: {vertice_atual}, Filho: {vizinho}")
 
+    # Item h) Busca de profundidade
     def bfs(self, vertice_inicial):
         visitados = set()
         fila = deque(
@@ -125,6 +137,7 @@ class Grafo:
                     if vizinho not in visitados and vizinho != pai_atual:
                         fila.append((vizinho, vertice_atual, distancia + 1))
 
+    # Item i) Busca em largura
     def dfs(self, vertice_inicial):
         visitados = set()
         tempo = 0  # Inicializa o tempo de visita
@@ -161,7 +174,9 @@ class Grafo:
         print("\nPi:", pi)
         print("\nv.ini:", v_ini)
         print("\nv.fim:", v_fim)
-
+        
+        
+    # Bellman ford
     def bellman_ford(self, vertice_origem):
         # Inicializa as listas de distâncias e predecessores
         distancias = {v: float("inf") for v in range(1, self.num_vertices() + 1)}
@@ -186,7 +201,9 @@ class Grafo:
                 return None
 
         return distancias, predecessores
-
+    
+    
+    # Dijkstra
     def dijkstra(self, vertice_origem):
         # Inicializa as listas de distâncias e predecessores
         distancias = {v: float("inf") for v in range(1, self.num_vertices() + 1)}
@@ -220,11 +237,13 @@ class Grafo:
 
 
 # coloque o diretorio onde vai ficar seu arquivo txt
+
 arquivo = open(
-    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste2-.txt",
+    "D:\Arquivos_\Documentos\Tiago\Python\vinicius\Grafos\digrafo\teste2-.txt",
     "r",
     encoding="utf-8",
 )
+
 
 num_vertices = int(arquivo.readline().rstrip())
 
@@ -242,11 +261,11 @@ grafo = Grafo()
 for elem in lista_aresta:
     grafo.add_aresta(int(elem[0]), int(elem[1]), int(elem[2]))
 
-print("numero de arestas/arcos: ", grafo.num_aresta())
-print("numero de vertces: ", grafo.num_vertices())
-print("vizinhos de v: ", grafo.vizinho_v(2))
-print("grau de vertice: ", grafo.grau_de_v(2))
-print("peso da aresta: ", grafo.pesos_arestas_entre_vertices(1, 2))
+print("numero de arestas/arcos: ", grafo.m())
+print("numero de vertces: ", grafo.n())
+print("vizinhos de v: ", grafo.viz(2))
+print("grau de vertice: ", grafo.d(2))
+print("peso da aresta: ", grafo.w(1, 2))
 print("\n BFS: ")
 grafo.bfs(2)
 print("\n DFS: ")
