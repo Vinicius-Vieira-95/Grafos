@@ -1,8 +1,3 @@
-# import time
-
-# import matplotlib.pyplot as plt
-# import networkx as nx
-
 import heapq
 from collections import deque
 
@@ -11,14 +6,14 @@ class Grafo:
     bfs_visitados = []
 
     # Função construtora para inicializar a classe grafo
-    def __init__(self): 
+    def __init__(self):
         self.g_num_vertices = 0
         self.g_num_arestas = 0
         self.grafo = []
         self.result = []
 
     # Função para adicionar aresta entre dois vértices
-    def add_aresta(self, u, v, peso): 
+    def add_aresta(self, u, v, peso):
         self.grafo.append([u, v, peso])
         self.g_num_arestas += 1
 
@@ -26,7 +21,7 @@ class Grafo:
         if pai[i] == i:
             return i
         return self.sub_arvore(pai, pai[i])
-    
+
     # Item a) retorna o número de vértices do grafo
     def n(self):
         # compara qual dos dois vertices são maiores
@@ -36,8 +31,8 @@ class Grafo:
             else:
                 self.g_num_vertices = elemento[0]
         return self.g_num_vertices
-    
-    # Item b) retorna o número de arestas do grafo    
+
+    # Item b) retorna o número de arestas do grafo
     def m(self):
         return self.g_num_arestas
 
@@ -53,7 +48,7 @@ class Grafo:
     def d(self, vertice):
         lista = self.viz(vertice)
         return len(lista)
-    
+
     # Item e) retorna o peso da aresta uv
     def w(self, u, v):
         peso = 0
@@ -67,35 +62,39 @@ class Grafo:
         if peso == 0:
             return "Não existe aresta entre os vértices informados"
         return peso
-    
+
     # Item g) retorna o gráu máximo presente no grafo
     def max_d(self):
         max_grau = 0
+        vertice_max_grau = 0
 
-        for vertice in range(1, self.n() + 1):
-            grau_vertice = self.d(vertice)
-            if grau_vertice > max_grau:
-                max_grau = grau_vertice
+        for vertice in self.grafo:
+            valor = self.d(vertice[0])
+            if valor > max_grau:
+                max_grau = valor
+                vertice_max_grau = vertice[0]
+                print(vertice_max_grau, max_grau)
 
-        return max_grau
+        return vertice_max_grau, max_grau
 
     # Item f) retorna o grau mínimo presente no grafo
     def min_d(self):
         # Inicializa o menor grau como infinito ou um valor grande o suficiente
         min_grau = float("inf")
+        vertice_min_grau = 0
 
-        for vertice in range(1, self.n() + 1):
-            grau_vertice = self.d(vertice)
-            if grau_vertice < min_grau:
-                min_grau = grau_vertice
+        for vertice in self.grafo:
+            valor = self.d(vertice[0])
+            if valor < min_grau:
+                min_grau = valor
+                vertice_min_grau = vertice[0]
+                print(vertice_min_grau, min_grau)
 
         # Se todos os vértices tiverem grau 0, atualiza o valor mínimo para 0
         if min_grau == float("inf"):
             min_grau = 0
 
-        return min_grau
-
-    
+        return vertice_min_grau, min_grau
 
     # def bfs(self, vertice_inicial):
     #     visitados = set()
@@ -117,7 +116,7 @@ class Grafo:
     #                     # Aqui você pode usar o vértice_atual e vizinho como necessário
     #                     print(f"Pai: {vertice_atual}, Filho: {vizinho}")
 
-    # Item h) Busca de profundidade
+    # Item h) Busca de largura
     def bfs(self, vertice_inicial):
         visitados = set()
         fila = deque(
@@ -137,7 +136,7 @@ class Grafo:
                     if vizinho not in visitados and vizinho != pai_atual:
                         fila.append((vizinho, vertice_atual, distancia + 1))
 
-    # Item i) Busca em largura
+    # Item i) Busca em profundidade
     def dfs(self, vertice_inicial):
         visitados = set()
         tempo = 0  # Inicializa o tempo de visita
@@ -174,8 +173,7 @@ class Grafo:
         print("\nPi:", pi)
         print("\nv.ini:", v_ini)
         print("\nv.fim:", v_fim)
-        
-        
+
     # Bellman ford
     def bellman_ford(self, vertice_origem):
         # Inicializa as listas de distâncias e predecessores
@@ -201,8 +199,7 @@ class Grafo:
                 return None
 
         return distancias, predecessores
-    
-    
+
     # Dijkstra
     def dijkstra(self, vertice_origem):
         # Inicializa as listas de distâncias e predecessores
@@ -239,7 +236,7 @@ class Grafo:
 # coloque o diretorio onde vai ficar seu arquivo txt
 
 arquivo = open(
-    "teste2-.txt",
+    "C:\\Users\\Pichau\\Desktop\\Projeto\\Grafos\\digrafo\\teste1-8.txt",
     "r",
     encoding="utf-8",
 )
@@ -275,6 +272,6 @@ print(grafo.bellman_ford(8))
 print("\n Dijkstra: ")
 print(grafo.dijkstra(8))
 
-# print("\n Grau máximo e mínimo:")
-# print("maior grau: ", grafo.grau_maximo())
-# print("menor grau: ", grafo.grau_minimo())
+print("\n Grau máximo e mínimo:")
+print("maior grau: ", grafo.max_d())
+print("menor grau: ", grafo.min_d())
